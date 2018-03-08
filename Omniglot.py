@@ -4,7 +4,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL']='3'  #No logging TF
 import tensorflow as tf
 import numpy as np
 import time
-from Model import memory_augmented_neural_network
+from MANN.Model import memory_augmented_neural_network
 from MANN.Utils.Generator import OmniglotGenerator
 from MANN.Utils.Metrics import accuracy_instance
 from MANN.Utils.tf_utils import update_tensor
