@@ -1,10 +1,10 @@
 import tensorflow as tf
 import numpy as np
-import pytest
+#import pytest
 
 import os
 import random
-from Images import get_shuffled_images, time_offset_label, load_transform
+from Utils.Images import get_shuffled_images, time_offset_label, load_transform
 
 class OmniglotGenerator(object):
     """Docstring for OmniglotGenerator"""
