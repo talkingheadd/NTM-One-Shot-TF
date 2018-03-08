@@ -5,9 +5,9 @@ import tensorflow as tf
 import numpy as np
 import time
 from Model import memory_augmented_neural_network
-from Utils.Generator import OmniglotGenerator
-from Utils.Metrics import accuracy_instance
-from Utils.tf_utils import update_tensor
+from MANN.Utils.Generator import OmniglotGenerator
+from MANN.Utils.Metrics import accuracy_instance
+from MANN.Utils.tf_utils import update_tensor
 
 def omniglot():
 
