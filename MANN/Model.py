@@ -1,10 +1,10 @@
 import tensorflow as tf
 import numpy as np
 
-from .Utils.init import weight_and_bias_init, shared_glorot_uniform, shared_one_hot
-from .Utils.similarities import cosine_similarity
-from .Utils.tf_utils import shared_float32
-from .Utils.tf_utils import update_tensor
+from Utils.init import weight_and_bias_init, shared_glorot_uniform, shared_one_hot
+from Utils.similarities import cosine_similarity
+from Utils.tf_utils import shared_float32
+from Utils.tf_utils import update_tensor
 
 
 def memory_augmented_neural_network(input_var, target_var, \
@@ -21,15 +21,17 @@ def memory_augmented_neural_network(input_var, target_var, \
     wu_0 = shared_one_hot((batch_size, memory_shape[0]), name='wu')
     
     def shape_high(shape):
-    	shape = np.array(shape)
-    	if isinstance(shape, int):
-            high = np.sqrt(6. / shape)
-    	else:
-            high = np.sqrt(6. / (np.sum(shape[:2]) * np.prod(shape[2:])))
-        return (list(shape),high)
+    	 shape = np.array(shape)
+    	 if isinstance(shape, int):
+             high = np.sqrt(6. / shape)
+             return (list(shape),high)
+    	 else:
+             high = np.sqrt(6. / (np.sum(shape[:2]) * np.prod(shape[2:])))
+             return (list(shape),high)
+        
 
     with tf.variable_scope("Weights"):
-    	shape, high = shape_high((nb_reads, controller_size, memory_shape[1]))
+        shape, high = shape_high((nb_reads, controller_size, memory_shape[1]))
         W_key = tf.get_variable('W_key', shape=shape,initializer=tf.random_uniform_initializer(-1*high, high))
         b_key = tf.get_variable('b_key', shape=(nb_reads, memory_shape[1]),initializer=tf.constant_initializer(0))
         shape, high = shape_high((nb_reads, controller_size, memory_shape[1]))
@@ -55,8 +57,9 @@ def memory_augmented_neural_network(input_var, target_var, \
         return [x[:,n*size:(n+1)*size] for n in range(nb_slice)]
 
 
-    def step((M_tm1, c_tm1, h_tm1, r_tm1, wr_tm1, wu_tm1),(x_t)):
-
+    def step(xparameter1,x_t):
+        #M_tm1, c_tm1, h_tm1, r_tm1, wr_tm1, wu_tm1
+        M_tm1, c_tm1, h_tm1, r_tm1, wr_tm1, wu_tm1=xparameter1
         with tf.variable_scope("Weights", reuse=True):
             W_key = tf.get_variable('W_key', shape=(nb_reads, controller_size, memory_shape[1]))
             b_key = tf.get_variable('b_key', shape=(nb_reads, memory_shape[1]))
@@ -104,7 +107,7 @@ def memory_augmented_neural_network(input_var, target_var, \
         ww_t = tf.reshape(ww_t,(batch_size, nb_reads, memory_shape[0]))
 
         with tf.variable_scope("M_t"):
-            print 'wlu_tm1 : ', wlu_tm1.get_shape().as_list()
+            print ('wlu_tm1 : ', wlu_tm1.get_shape().as_list())
             M_t = update_tensor(M_tm1, wlu_tm1[:,0], tf.constant(0., shape=[batch_size, memory_shape[1]]))      #Update tensor done using sparse to dense
         M_t = tf.add(M_t, tf.matmul(tf.transpose(ww_t, perm=[0,2,1]   ), a_t))   #(batch_size, memory_size[0], memory_size[1])
         K_t = cosine_similarity(k_t, M_t)
