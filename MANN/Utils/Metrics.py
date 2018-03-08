@@ -11,13 +11,15 @@ def accuracy_instance(predictions, targets, n=[1, 2, 3, 4, 5, 10], nb_classes=5,
     accuracy = tf.constant(value=0, shape=(batch_size, nb_samples_per_class), dtype=tf.float32)
     indices = tf.constant(value=0, shape=(batch_size, nb_classes+1), dtype=tf.float32)
 
-    def step_((accuracy, indices), (p, t)):
+    def step_(ai, pt):
         """with tf.variable_scope("Metric_step_var", reuse=True):
             accuracy = tf.get_variable(name="accuracy", shape=(batch_size, nb_samples_per_class),
                                        initializer=tf.constant_initializer(0), dtype=tf.float32)
             indices = tf.get_variable(name="indices", shape=(batch_size, nb_classes + 1),
                                       initializer=tf.constant_initializer(0), dtype=tf.float32)"""
-
+        #(accuracy, indices), (p, t)
+        accuracy, indices = ai
+        p,t= pt
         p = tf.cast(p, tf.int32)
         t = tf.cast(t, tf.int32)
         ##Accuracy Update
